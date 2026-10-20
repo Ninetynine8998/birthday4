@@ -43,10 +43,7 @@ export default function LaysBagTheme() {
   const handleDragEnd = (event: any, info: any) => {
     if (Math.abs(info.offset.x) > 80 || info.offset.y < -80) {
       if (!isBagOpen) {
-        setIsBagOpen(true);
-        setShowPoppingChips(true);
-        setTimeout(() => setShowPoppingChips(false), 1500);
-
+        // แก้บั๊ค iOS: สั่งให้ฝาถุงปลิวทันทีก่อน
         topControls.start({ 
           x: info.offset.x * 3, 
           y: info.offset.y * 3 - 200, 
@@ -54,6 +51,14 @@ export default function LaysBagTheme() {
           opacity: 0,
           transition: { duration: 0.5, ease: "easeOut" }
         });
+
+        // แก้บั๊ค iOS: หน่วงเวลา State 50ms เพื่อไม่ให้แอนิเมชันสะดุดบน Safari
+        setTimeout(() => {
+          setIsBagOpen(true);
+          setShowPoppingChips(true);
+        }, 50);
+
+        setTimeout(() => setShowPoppingChips(false), 1550);
       }
     }
   };
@@ -72,7 +77,8 @@ export default function LaysBagTheme() {
       
       <motion.div 
         layout
-        className={`flex flex-col md:flex-row items-center md:items-start justify-center gap-10 md:gap-16 w-full transition-all duration-1000 ease-in-out ${isBagOpen ? 'max-w-5xl' : 'max-w-sm'}`}
+        // แก้บั๊ค Mobile: บังคับให้เป็น flex-row และย่อสเกล เพื่อให้ถุงขยับซ้ายและมีพื้นที่ให้กล่องข้อความฝั่งขวา
+        className={`flex ${isBagOpen ? 'flex-row items-start scale-[0.65] sm:scale-100 origin-top' : 'flex-col items-center'} md:flex-row md:items-start justify-center gap-10 md:gap-16 w-full transition-all duration-1000 ease-in-out ${isBagOpen ? 'max-w-5xl' : 'max-w-sm'}`}
       >
         
         {/* ฝั่งซ้าย: ถุงขนม */}

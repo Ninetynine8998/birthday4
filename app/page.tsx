@@ -43,7 +43,10 @@ export default function LaysBagTheme() {
   const handleDragEnd = (event: any, info: any) => {
     if (Math.abs(info.offset.x) > 80 || info.offset.y < -80) {
       if (!isBagOpen) {
-        
+        setIsBagOpen(true);
+        setShowPoppingChips(true);
+        setTimeout(() => setShowPoppingChips(false), 1500);
+
         topControls.start({ 
           x: info.offset.x * 3, 
           y: info.offset.y * 3 - 200, 
@@ -51,14 +54,6 @@ export default function LaysBagTheme() {
           opacity: 0,
           transition: { duration: 0.5, ease: "easeOut" }
         });
-
-        // หน่วงเวลาแก้บั๊คแอนิเมชันสะดุดบน iOS Safari
-        setTimeout(() => {
-          setIsBagOpen(true);
-          setShowPoppingChips(true);
-        }, 50);
-
-        setTimeout(() => setShowPoppingChips(false), 1550);
       }
     }
   };
@@ -73,15 +68,14 @@ export default function LaysBagTheme() {
   };
 
   return (
-    <div className={`${mali.className} min-h-screen bg-[#FDF8E1] flex flex-col items-center justify-center p-4 overflow-x-hidden select-none touch-none`}>
+    <div className={`${mali.className} min-h-screen bg-[#FDF8E1] flex flex-col items-center justify-start md:justify-center py-12 md:py-4 px-4 overflow-x-hidden select-none`}>
       
       <motion.div 
         layout
-        // ใช้ flex-col เป็นค่าเริ่มต้น (มือถือ ถุงจะอยู่ตรงกลาง Recap อยู่ล่าง) และใช้ md:flex-row สำหรับ PC (แบ่งซ้าย-ขวา)
         className={`flex flex-col md:flex-row items-center md:items-start justify-center gap-10 md:gap-16 w-full transition-all duration-1000 ease-in-out ${isBagOpen ? 'max-w-5xl' : 'max-w-sm'}`}
       >
         
-        {/* ฝั่งซ้าย (PC) / ด้านบน (มือถือ): ถุงขนม */}
+        {/* ฝั่งซ้าย: ถุงขนม */}
         <motion.div layout className="relative flex flex-col items-center z-10 w-full max-w-sm shrink-0">
           
           <div className="text-center mb-10">
@@ -197,7 +191,7 @@ export default function LaysBagTheme() {
           </div>
         </motion.div>
 
-        {/* ฝั่งขวา (PC) / ด้านล่าง (มือถือ): โซน Recap */}
+        {/* ฝั่งขวา (PC) / ด้านล่าง (Mobile): โซน Recap */}
         <AnimatePresence>
           {isBagOpen && (
             <motion.div 
@@ -219,7 +213,7 @@ export default function LaysBagTheme() {
                 </motion.div>
               )}
 
-              <div className="flex flex-col gap-4 max-h-[450px] overflow-y-auto pr-2 pb-10">
+              <div className="flex flex-col gap-4 overflow-y-visible md:max-h-[450px] md:overflow-y-auto pr-2 pb-10">
                 {chipsData.slice(0, currentChipIndex).map((chip, idx) => (
                   <motion.div 
                     key={chip.id}

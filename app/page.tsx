@@ -43,7 +43,7 @@ export default function LaysBagTheme() {
   const handleDragEnd = (event: any, info: any) => {
     if (Math.abs(info.offset.x) > 80 || info.offset.y < -80) {
       if (!isBagOpen) {
-        // แก้บั๊ค iOS: สั่งให้ฝาถุงปลิวทันทีก่อน
+        
         topControls.start({ 
           x: info.offset.x * 3, 
           y: info.offset.y * 3 - 200, 
@@ -52,7 +52,7 @@ export default function LaysBagTheme() {
           transition: { duration: 0.5, ease: "easeOut" }
         });
 
-        // แก้บั๊ค iOS: หน่วงเวลา State 50ms เพื่อไม่ให้แอนิเมชันสะดุดบน Safari
+        // หน่วงเวลาแก้บั๊คแอนิเมชันสะดุดบน iOS Safari
         setTimeout(() => {
           setIsBagOpen(true);
           setShowPoppingChips(true);
@@ -77,11 +77,11 @@ export default function LaysBagTheme() {
       
       <motion.div 
         layout
-        // แก้บั๊ค Mobile: บังคับให้เป็น flex-row และย่อสเกล เพื่อให้ถุงขยับซ้ายและมีพื้นที่ให้กล่องข้อความฝั่งขวา
-        className={`flex ${isBagOpen ? 'flex-row items-start scale-[0.65] sm:scale-100 origin-top' : 'flex-col items-center'} md:flex-row md:items-start justify-center gap-10 md:gap-16 w-full transition-all duration-1000 ease-in-out ${isBagOpen ? 'max-w-5xl' : 'max-w-sm'}`}
+        // ใช้ flex-col เป็นค่าเริ่มต้น (มือถือ ถุงจะอยู่ตรงกลาง Recap อยู่ล่าง) และใช้ md:flex-row สำหรับ PC (แบ่งซ้าย-ขวา)
+        className={`flex flex-col md:flex-row items-center md:items-start justify-center gap-10 md:gap-16 w-full transition-all duration-1000 ease-in-out ${isBagOpen ? 'max-w-5xl' : 'max-w-sm'}`}
       >
         
-        {/* ฝั่งซ้าย: ถุงขนม */}
+        {/* ฝั่งซ้าย (PC) / ด้านบน (มือถือ): ถุงขนม */}
         <motion.div layout className="relative flex flex-col items-center z-10 w-full max-w-sm shrink-0">
           
           <div className="text-center mb-10">
@@ -197,7 +197,7 @@ export default function LaysBagTheme() {
           </div>
         </motion.div>
 
-        {/* ฝั่งขวา: โซน Recap (คลิกการ์ดเพื่อดูข้อความเต็มได้) */}
+        {/* ฝั่งขวา (PC) / ด้านล่าง (มือถือ): โซน Recap */}
         <AnimatePresence>
           {isBagOpen && (
             <motion.div 
@@ -206,8 +206,8 @@ export default function LaysBagTheme() {
               transition={{ delay: 0.4, duration: 0.6 }}
               className="w-full md:w-1/2 max-w-sm md:max-w-md flex flex-col gap-4 mt-8 md:mt-16"
             >
-              <h2 className="text-2xl font-bold text-[#f94144] mb-2 text-center md:text-left border-b-2 border-red-200 pb-2 flex items-center gap-2">
-                <span>ความทรงจำในถุง</span> <span className="text-xl"></span>
+              <h2 className="text-2xl font-bold text-[#f94144] mb-2 text-center md:text-left border-b-2 border-red-200 pb-2 flex items-center gap-2 justify-center md:justify-start">
+                <span>ความทรงจำในถุง</span>
               </h2>
               
               {currentChipIndex === 0 && (
@@ -226,7 +226,7 @@ export default function LaysBagTheme() {
                     initial={{ opacity: 0, x: 20, scale: 0.9 }}
                     animate={{ opacity: 1, x: 0, scale: 1 }}
                     transition={{ type: "spring", bounce: 0.4, delay: 0.1 }}
-                    onClick={() => setActiveModal(idx)} // 🌟 คลิกการ์ดเพื่อเปิดดูข้อความเต็ม
+                    onClick={() => setActiveModal(idx)}
                     className="bg-white p-4 rounded-2xl shadow-sm border-2 border-yellow-200 flex items-center gap-4 hover:shadow-md hover:border-pink-300 transition-all cursor-pointer group"
                   >
                     <div className="w-12 h-12 bg-red-50 rounded-full flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
